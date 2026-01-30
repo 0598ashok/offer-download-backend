@@ -15,6 +15,15 @@ exports.uploadOffer = async (req, res) => {
             });
         }
 
+        // 🔍 CHECK DUPLICATE EMAIL
+        const existingOffer = await Offer.findOne({ employeeEmail });
+        if (existingOffer) {
+            return res.status(409).json({
+                success: false,
+                message: "Offer for this email already exists!",
+            });
+        }
+
         const offer = await Offer.create({
             employeeName,
             employeeEmail,

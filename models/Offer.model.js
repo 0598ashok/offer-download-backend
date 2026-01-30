@@ -14,17 +14,20 @@ const offerSchema = new mongoose.Schema(
             default: 0,
         },
 
-        // 👇 NEW
-        downloadHistory: [
-            {
-                email: String,
-                downloadedAt: {
-                    type: Date,
-                    default: Date.now,
+        // 🔥 IMPORTANT FIX
+        downloadHistory: {
+            type: [
+                {
+                    email: String,
+                    downloadedAt: {
+                        type: Date,
+                        default: Date.now,
+                    },
+                    ip: String,
                 },
-                ip: String,
-            },
-        ],
+            ],
+            default: [], // 👈 THIS LINE SAVES YOU
+        },
     },
     { timestamps: true }
 );
