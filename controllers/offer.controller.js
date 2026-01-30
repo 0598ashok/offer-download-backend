@@ -2,6 +2,8 @@ const Offer = require("../models/Offer.model");
 const crypto = require("crypto");
 const path = require("path");
 const fs = require("fs");
+const sendEmail = require("../utils/sendEmail");
+const offerEmailTemplate = require("../utils/offerEmailTemplate");
 
 
 exports.uploadOffer = async (req, res) => {
@@ -62,46 +64,7 @@ exports.getAllOffers = async (req, res) => {
 };
 
 
-/**
- * GENERATE OFFER LINK (Admin)
- */
-exports.generateOfferLink = async (req, res) => {
-    try {
-        const { id } = req.params;
 
-        const offer = await Offer.findById(id);
-        if (!offer) {
-            return res.status(404).json({
-                success: false,
-                message: "Offer not found",
-            });
-        }
-
-        // 🔹 Generate secure token
-        const token = crypto.randomBytes(32).toString("hex");
-
-        // 🔹 Set expiry (48 hours)
-        const expiresAt = new Date();
-        expiresAt.setHours(expiresAt.getHours() + 48);
-
-        offer.token = token;
-        offer.expiresAt = expiresAt;
-        await offer.save();
-
-        const offerLink = `http://localhost:3000/employee/offer/${token}`;
-
-        res.status(200).json({
-            success: true,
-            link: offerLink,
-            expiresAt,
-        });
-    } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: "Failed to generate offer link",
-        });
-    }
-};
 
 /**
  * VALIDATE OFFER LINK (Employee)
@@ -403,6 +366,71 @@ exports.getOfferById = async (req, res) => {
         res.status(500).json({
             success: false,
             message: "Failed to fetch offer",
+        });
+    }
+};
+
+
+exports.generateOfferLink = async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const offer = await Offer.findById(id);
+        if (!offer) {
+            return res.status(404).json({
+                success: false,
+                message: "Offer not found",
+            });
+        }
+
+        const token = crypto.randomBytes(32).toString("hex");
+
+        const expiresAt = new Date();
+        expiresAt.setHours(expiresAt.getHours() + 48);
+        // expiresAt.setMinutes(expiresAt.getMinutes() + 5);
+
+
+        offer.token = token;
+        offer.expiresAt = expiresAt;
+        await offer.save();
+
+        const offerLink = `http://localhost:3000/employee/offer/${token}`;
+
+        // ✅ SEND EMAIL (To Employee & Admin)
+        try {
+            await sendEmail({
+                to: [offer.employeeEmail, process.env.MAIL_USER], // Send to both
+                subject: "Your Offer Letter – Quantum Works",
+                html: offerEmailTemplate({
+                    name: offer.employeeName,
+                    link: offerLink,
+                    expiresAt,
+                }),
+            });
+            console.log("Email sent successfully to:", offer.employeeEmail);
+        } catch (emailError) {
+            console.error("Failed to send email:", emailError);
+            // Don't fail the whole request, but maybe warn?
+            // Actually, we should probably return success but with a warning.
+            return res.status(200).json({
+                success: true,
+                link: offerLink,
+                expiresAt,
+                message: "Offer link generated, but email failed to send. Please check server logs.",
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            link: offerLink,
+            expiresAt,
+            message: "Offer link generated & email sent",
+        });
+    } catch (error) {
+        console.error("Generate Link Critical Error:", error);
+        res.status(500).json({
+            success: false,
+            message: "Failed to generate offer link (Server Error)",
         });
     }
 };

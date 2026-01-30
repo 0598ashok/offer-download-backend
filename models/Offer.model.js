@@ -5,6 +5,7 @@ const offerSchema = new mongoose.Schema(
         employeeName: String,
         employeeEmail: String,
         filePath: String,
+        originalFileName: String,
 
         token: String,
         expiresAt: Date,
