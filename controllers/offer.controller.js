@@ -394,7 +394,8 @@ exports.generateOfferLink = async (req, res) => {
         offer.expiresAt = expiresAt;
         await offer.save();
 
-        const offerLink = `http://localhost:3000/employee/offer/${token}`;
+        const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
+        const offerLink = `${frontendUrl}/employee/offer/${token}`;
 
         // ✅ SEND EMAIL (To Employee & Admin)
         try {

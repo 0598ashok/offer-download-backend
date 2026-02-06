@@ -6,7 +6,7 @@ const cors = require("cors");
 const path = require("path");
 
 const app = express();
-const port = 4444;
+const port = process.env.PORT || 4444;
 
 app.use(cors({
     origin: "*", // React app
