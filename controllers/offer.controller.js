@@ -387,7 +387,7 @@ exports.generateOfferLink = async (req, res) => {
 
         const expiresAt = new Date();
         expiresAt.setHours(expiresAt.getHours() + 48);
-        // expiresAt.setMinutes(expiresAt.getMinutes() + 5);
+        // expiresAt.setMinutes(expiresAt.getMinutes() + 2);
 
 
         offer.token = token;
