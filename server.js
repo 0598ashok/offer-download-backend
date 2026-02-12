@@ -11,6 +11,7 @@ const port = process.env.PORT || 4444;
 app.use(cors({
     origin: "*", // React app
     credentials: true,
+    exposedHeaders: ["Content-Type", "Content-Disposition"],
 }));
 app.use(express.json());
 
