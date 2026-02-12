@@ -37,7 +37,7 @@ console.log("SMTP_USER =", process.env.SMTP_USER);
 console.log("SMTP_PASS =", process.env.SMTP_PASS);
 
 const sendEmail = async ({ to, subject, html }) => {
-<<<<<<< HEAD
+
     try {
         // Support both new `SMTP_*` and legacy `MAIL_*` env var names
         const host = process.env.SMTP_HOST || process.env.MAIL_HOST;
@@ -100,27 +100,7 @@ const sendEmail = async ({ to, subject, html }) => {
         console.error("Full error:", err);
         throw err;
     }
-=======
-    const transporter = nodemailer.createTransport({
-        host: "smtp.hostinger.com",
-        port: 465,
-        secure: true,
-        auth: {
-            user: process.env.SMTP_USER, // hr@quantumworks.in
-            pass: process.env.SMTP_PASS, // email password
-        },
-    });
 
-    // Optional but recommended (debug)
-    await transporter.verify();
-
-    await transporter.sendMail({
-        from: `"Quantum Works HR" <${process.env.SMTP_USER}>`,
-        to,
-        subject,
-        html,
-    });
->>>>>>> da9ae66bb054e0de0208ef596d876b28c76c6d6c
 };
 
 module.exports = sendEmail;
