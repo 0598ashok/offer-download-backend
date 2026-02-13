@@ -72,19 +72,23 @@ exports.getAllOffers = async (req, res) => {
 exports.validateOfferLink = async (req, res) => {
     try {
         const { token } = req.params;
+        console.log("🔗 Validating token:", token);
 
         const offer = await Offer.findOne({ token });
 
         if (!offer) {
+            console.error("❌ Offer not found for token:", token);
             return res.status(404).json({
                 success: false,
                 valid: false,
                 message: "Invalid link",
             });
         }
+        console.log("✅ Offer found:", offer.employeeName);
 
         // check expiry
         if (offer.expiresAt && new Date() > offer.expiresAt) {
+            console.warn("⏰ Link expired for token:", token);
             return res.status(410).json({
                 success: false,
                 valid: false,
@@ -98,6 +102,7 @@ exports.validateOfferLink = async (req, res) => {
             message: "Link is valid",
         });
     } catch (error) {
+        console.error("❌ Validation error:", error.message);
         res.status(500).json({
             success: false,
             valid: false,
@@ -281,6 +286,16 @@ exports.downloadOffer = async (req, res) => {
             });
         }
 
+        // Check if file exists
+        const filePath = path.resolve(offer.filePath);
+        if (!fs.existsSync(filePath)) {
+            console.error("❌ File not found at path:", filePath);
+            return res.status(404).json({
+                success: false,
+                message: "PDF file not found on server",
+            });
+        }
+
         // 👇 Increment count
         offer.downloadCount += 1;
 
@@ -292,8 +307,6 @@ exports.downloadOffer = async (req, res) => {
 
         await offer.save();
 
-        const filePath = path.resolve(offer.filePath);
-
         res.setHeader("Content-Type", "application/pdf");
         res.setHeader(
             "Content-Disposition",
@@ -302,6 +315,7 @@ exports.downloadOffer = async (req, res) => {
 
         res.sendFile(filePath);
     } catch (err) {
+        console.error("❌ Download error:", err);
         res.status(500).json({
             success: false,
             message: "Failed to load offer",
@@ -374,33 +388,48 @@ exports.getOfferById = async (req, res) => {
 exports.generateOfferLink = async (req, res) => {
     try {
         const { id } = req.params;
+        console.log("🔍 Looking for offer with ID:", id);
 
         const offer = await Offer.findById(id);
         if (!offer) {
+            console.error("❌ Offer not found for ID:", id);
             return res.status(404).json({
                 success: false,
                 message: "Offer not found",
             });
         }
+        console.log("✅ Offer found:", offer.employeeName);
 
         const token = crypto.randomBytes(32).toString("hex");
 
         const expiresAt = new Date();
         expiresAt.setHours(expiresAt.getHours() + 48);
-        // expiresAt.setMinutes(expiresAt.getMinutes() + 2);
-
 
         offer.token = token;
         offer.expiresAt = expiresAt;
-        await offer.save();
+        const savedOffer = await offer.save();
+        console.log("✅ Token saved to offer. Saved offer:", {
+            _id: savedOffer._id,
+            token: savedOffer.token,
+            employeeName: savedOffer.employeeName,
+        });
 
         const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
         const offerLink = `${frontendUrl}/employee/offer/${token}`;
+        console.log("🔗 Generated link:", offerLink);
 
-        // ✅ SEND EMAIL (To Employee & Admin)
+        // ✅ SEND EMAIL (To Employee)
         try {
+            const emailRecipients = [offer.employeeEmail];
+            
+            // Add admin email if it exists
+            if (process.env.SMTP_USERNAME) {
+                emailRecipients.push(process.env.SMTP_USERNAME);
+            }
+            
+            console.log("📧 Sending email to:", emailRecipients);
             await sendEmail({
-                to: [offer.employeeEmail, process.env.MAIL_USER], // Send to both
+                to: emailRecipients,
                 subject: "Your Offer Letter – Quantum Works",
                 html: offerEmailTemplate({
                     name: offer.employeeName,
@@ -408,16 +437,35 @@ exports.generateOfferLink = async (req, res) => {
                     expiresAt,
                 }),
             });
-            console.log("Email sent successfully to:", offer.employeeEmail);
+            console.log("✅ Email sent successfully to:", offer.employeeEmail);
         } catch (emailError) {
-            console.error("Failed to send email:", emailError);
-            // Don't fail the whole request, but maybe warn?
-            // Actually, we should probably return success but with a warning.
+            console.error("❌ Failed to send email:", emailError.message);
+            console.error("Full error:", emailError);
+            
+            // Check for specific error types
+            const isConfigError = emailError.message.includes("SMTP configuration missing");
+            const isAuthError = emailError.message.includes("Invalid login") || 
+                              emailError.message.includes("EAUTH") ||
+                              emailError.message.includes("Authentication");
+            
+            // Still return success with the link, even if email fails
+            // This ensures the offer link is created even if email fails
+            let errorMessage = "Offer link generated successfully!";
+            
+            if (isConfigError) {
+                errorMessage += "\n⚠️ Email not sent - SMTP not configured on server.\nSet environment variables: SMTP_HOST, SMTP_PORT, SMTP_USERNAME, SMTP_PASSWORD\nSee DEPLOYMENT_SETUP.md for details.";
+            } else if (isAuthError) {
+                errorMessage += "\n⚠️ Email not sent - Invalid SMTP credentials.\nVerify SMTP_USERNAME and SMTP_PASSWORD in environment variables.";
+            } else {
+                errorMessage += "\n⚠️ Email not sent - " + emailError.message;
+            }
+            
             return res.status(200).json({
                 success: true,
                 link: offerLink,
                 expiresAt,
-                message: "Offer link generated, but email failed to send. Please check server logs.",
+                message: errorMessage,
+                emailFailed: true,
             });
         }
 
@@ -428,10 +476,12 @@ exports.generateOfferLink = async (req, res) => {
             message: "Offer link generated & email sent",
         });
     } catch (error) {
-        console.error("Generate Link Critical Error:", error);
+        console.error("❌ Generate Link Critical Error:", error.message);
+        console.error("Stack:", error.stack);
         res.status(500).json({
             success: false,
             message: "Failed to generate offer link (Server Error)",
+            error: error.message,
         });
     }
 };
