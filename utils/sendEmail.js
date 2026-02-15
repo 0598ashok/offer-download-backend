@@ -77,9 +77,6 @@ const sendEmail = async ({ to, subject, html }) => {
                 user,
                 pass: password,
             },
-            tls: {
-                rejectUnauthorized: false,
-            },
         });
 
         // Test connection
