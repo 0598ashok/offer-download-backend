@@ -35,41 +35,29 @@ require("dotenv").config();
 
 const sendEmail = async ({ to, subject, html }) => {
     try {
-        const host = process.env.SMTP_HOST || process.env.MAIL_HOST;
-        const port = parseInt(
-            process.env.SMTP_PORT || process.env.MAIL_PORT || "587",
-            10
-        );
-        const user = process.env.SMTP_USER || process.env.MAIL_USER;
-        const rawPassword =
-            process.env.SMTP_PASS ||
-            process.env.MAIL_PASS ||
-            process.env.MAIL_PASSWORD;
+        const host = process.env.SMTP_HOST; // smtp.hostinger.com
+        const port = Number(process.env.SMTP_PORT); // 465
+        const user = process.env.SMTP_USER; // hr@quantumworks.in
+        const pass = process.env.SMTP_PASS; // mail password
 
-        if (!host || !user || !rawPassword) {
+        if (!host || !port || !user || !pass) {
             throw new Error("SMTP environment variables missing");
         }
 
-        // 🔥 IMPORTANT LOG
-        console.log("📧 Using mail config:", {
+        console.log("📧 Using Hostinger SMTP config:", {
             host,
             port,
             user: "✅",
-            secure: port === 465,
+            secure: true,
         });
-
-        const password = rawPassword.replace(/^"|"$/g, "");
 
         const transporter = nodemailer.createTransport({
             host,
             port,
-            secure: port === 465,   // ✅ AUTO FIX
+            secure: true, // ✅ MUST be true for 465
             auth: {
                 user,
-                pass: password,
-            },
-            tls: {
-                rejectUnauthorized: false, // ✅ helps on Render
+                pass,
             },
         });
 
@@ -78,21 +66,23 @@ const sendEmail = async ({ to, subject, html }) => {
         console.log("✅ SMTP connection verified");
 
         const info = await transporter.sendMail({
-            from: `"Quantum Works HR" <${user}>`,
-            to: Array.isArray(to) ? to.join(",") : to,
+            from: `"Quantum Works HR" <${user}>`, // ✅ Hostinger mail
+            to: Array.isArray(to) ? to.join(", ") : to,
             subject,
             html,
         });
 
-        console.log("✅ Email sent:", info.messageId);
+        console.log("✅ Email sent successfully:", info.messageId);
         return info;
-    } catch (err) {
-        console.error("❌ Send email error:", err.message);
-        throw err;
+    } catch (error) {
+        console.error("❌ Send email error:", error.message);
+        throw error;
     }
 };
 
 module.exports = sendEmail;
+
+
 
 // const sendEmail = async ({ to, subject, html }) => {
 //     try {

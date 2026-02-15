@@ -16,7 +16,7 @@ app.use(cors({
 app.use(express.json());
 
 
-mongoose.connect("mongodb+srv://0598ashok:0598ashok@cluster0.mkzrh9f.mongodb.net/offerDownload?appName=Cluster0")
+mongoose.connect(process.env.MONGO_URI)
     .then(() => console.log('DB Connected'))
     .catch((error) => console.log(error));
 
