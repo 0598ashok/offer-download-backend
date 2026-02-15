@@ -1,0 +1,111 @@
+.offerUploadWrapper {
+    min-height: 100vh;
+    background: #f4f6f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.offerUploadCard {
+    width: 100%;
+    max-width: 600px;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.offerUploadTitle {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.offerUploadSubtitle {
+    text-align: center;
+    font-size: 14px;
+    color: #6c757d;
+    margin-bottom: 25px;
+}
+
+.offerUploadForm {
+    width: 100%;
+}
+
+.offerFieldBlock {
+    margin-bottom: 18px;
+}
+
+.offerFieldLabel {
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+
+.offerTextInput,
+.offerFileInput {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid #ced4da;
+    font-size: 14px;
+}
+
+.offerTextInput:focus,
+.offerFileInput:focus {
+    outline: none;
+    border-color: #000;
+}
+
+.offerFileNote {
+    display: block;
+    margin-top: 5px;
+    font-size: 12px;
+    color: #6c757d;
+}
+
+.offerActionRow {
+    display: flex;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.offerSubmitBtn {
+    flex: 1;
+    background: #0077bf;
+    color: #fff;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.offerSubmitBtn:hover {
+    background: #0b5ed7;
+}
+
+.offerCancelBtn {
+    flex: 1;
+    background: #e9ecef;
+    color: #333;
+    border: none;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.offerCancelBtn:hover {
+    background: #d6d8db;
+}
+
+/* 📱 Mobile Responsive */
+@media (max-width: 480px) {
+    .offerUploadCard {
+        padding: 22px;
+    }
+}

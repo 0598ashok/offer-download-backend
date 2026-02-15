@@ -1,0 +1,124 @@
+.viewOfferWrapper {
+    min-height: 100vh;
+    background: #f4f6f9;
+    padding: 30px 15px;
+}
+
+/* Header */
+.viewOfferHeader {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.viewOfferTitle {
+    font-size: 24px;
+    margin-bottom: 6px;
+}
+
+.viewOfferSub {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+/* Cards */
+.offerPreviewCard,
+.offerInfoCard,
+.offerSupportCard {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+}
+
+.sectionTitle {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+}
+
+/* PDF Viewer */
+.offerPdfViewer {
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+.offerDownloadBtn {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 10px 16px;
+    background: #2287c5;
+    color: #ffffff;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+/* Info section */
+.infoText {
+    font-size: 14px;
+    color: #374151;
+    margin-bottom: 12px;
+    line-height: 1.6;
+}
+
+.infoList {
+    padding-left: 18px;
+    margin-bottom: 15px;
+}
+
+.infoList li {
+    font-size: 14px;
+    margin-bottom: 6px;
+    color: #374151;
+}
+
+.infoNote {
+    background: #f1f5f9;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    color: #555;
+}
+
+/* Support card */
+.offerSupportCard {
+    margin-top: 15px;
+}
+
+.offerSupportCard h6 {
+    font-size: 15px;
+    margin-bottom: 6px;
+}
+
+.offerSupportCard p {
+    font-size: 13px;
+    color: #6b7280;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .offerPdfViewer object {
+        height: 420px;
+    }
+}
+
+.supportMail {
+    margin-top: 6px;
+    font-size: 14px;
+}
+
+.supportMail a {
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.supportMail a:hover {
+    text-decoration: underline;
+}
+
+.viewOfferHeader {
+    margin-top: 50px;
+}

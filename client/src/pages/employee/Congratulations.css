@@ -1,0 +1,145 @@
+/* 🎉 Congratulations / Download Page */
+
+.congratsWrapper {
+    min-height: 100vh;
+    background: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+}
+
+.congratsCard {
+    width: 100%;
+    max-width: 600px;
+    /* background: var(--bg-card); */
+    border-radius: var(--radius-xl);
+    padding: 5rem 3rem;
+    text-align: center;
+    /* box-shadow: var(--shadow-xl); */
+    /* border: 1px solid rgba(255, 255, 255, 0.8); */
+    animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Logo */
+.congratsLogo {
+    margin-bottom: 2rem;
+}
+
+.congratsLogo img {
+    max-width: 180px;
+}
+
+/* Titles */
+.congratsTitle {
+    font-size: 1.75rem;
+    color: var(--success);
+    margin-bottom: 0.75rem;
+    font-weight: 700;
+}
+
+.congratsText {
+    font-size: 1.1rem;
+    color: var(--text-main);
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.congratsSubText {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+    line-height: 1.6;
+}
+
+.congratsButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 50%;
+    padding: 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    background: var(--primary);
+    color: #ffffff;
+    border: none;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: var(--shadow-md);
+}
+
+.congratsButton:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+}
+
+.congratsButton:active {
+    transform: translateY(0);
+}
+
+.congratsButton:disabled {
+    background: var(--text-muted);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.congratsFooter {
+    margin-top: 2rem;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+}
+
+/* Invalid State */
+.invalidTitle {
+    font-size: 1.5rem;
+    color: var(--danger);
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.invalidText {
+    font-size: 1rem;
+    color: var(--text-muted);
+}
+
+/* Wait Section */
+.waitSection {
+    margin-top: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.waitText {
+    margin-top: 1rem;
+    font-size: 0.95rem;
+    color: var(--text-main);
+    font-weight: 500;
+}
+
+/* Keep Loader as is or update colors if needed */
+.loader {
+    /* ... existing loader logic ... */
+    /* Updating color to match brand if needed */
+    --c: no-repeat radial-gradient(farthest-side, var(--primary) 93%, #0000);
+}
+
+.loader:before {
+    background: var(--primary);
+}
