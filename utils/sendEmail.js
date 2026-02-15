@@ -65,7 +65,7 @@ const sendEmail = async ({ to, subject, html }) => {
         // Remove quotes from password if present
         const password = rawPassword?.replace(/^\"|\"$/g, "");
 
-        const secure = port === 587; // true for 465, false for other ports (e.g., 587)
+        const secure = false; // true for 465, false for other ports (e.g., 587)
 
         const transporter = nodemailer.createTransport({
             host,
