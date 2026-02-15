@@ -42,16 +42,16 @@ const sendEmail = async ({ to, subject, html }) => {
         // Support both new `SMTP_*` and legacy `MAIL_*` env var names
         const host = process.env.SMTP_HOST || process.env.MAIL_HOST;
         const port = parseInt(process.env.SMTP_PORT || process.env.MAIL_PORT || "465", 10);
-        const user = process.env.SMTP_USERNAME || process.env.MAIL_USER;
-        const rawPassword = process.env.SMTP_PASSWORD || process.env.MAIL_PASS || process.env.MAIL_PASSWORD;
+        const user = process.env.SMTP_USER || process.env.MAIL_USER;
+        const rawPassword = process.env.SMTP_PASS || process.env.MAIL_PASS || process.env.MAIL_PASSWORD;
 
         if (!host || !user || !rawPassword) {
             console.error("❌ SMTP/Mail environment variables not configured!");
             console.error("Available env vars:", {
                 SMTP_HOST: process.env.SMTP_HOST ? "✅" : "❌",
                 SMTP_PORT: process.env.SMTP_PORT ? "✅" : "❌",
-                SMTP_USERNAME: process.env.SMTP_USERNAME ? "✅" : "❌",
-                SMTP_PASSWORD: process.env.SMTP_PASSWORD ? "✅" : "❌",
+                SMTP_USER: process.env.SMTP_USER ? "✅" : "❌",
+                SMTP_PASS: process.env.SMTP_PASS ? "✅" : "❌",
                 MAIL_HOST: process.env.MAIL_HOST ? "✅" : "❌",
                 MAIL_PORT: process.env.MAIL_PORT ? "✅" : "❌",
                 MAIL_USER: process.env.MAIL_USER ? "✅" : "❌",
