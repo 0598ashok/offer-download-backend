@@ -41,7 +41,7 @@ const sendEmail = async ({ to, subject, html }) => {
     try {
         // Support both new `SMTP_*` and legacy `MAIL_*` env var names
         const host = process.env.SMTP_HOST || process.env.MAIL_HOST;
-        const port = parseInt(process.env.SMTP_PORT || process.env.MAIL_PORT || "465", 10);
+        const port = parseInt(process.env.SMTP_PORT || process.env.MAIL_PORT || "587", 10);
         const user = process.env.SMTP_USER || process.env.MAIL_USER;
         const rawPassword = process.env.SMTP_PASS || process.env.MAIL_PASS || process.env.MAIL_PASSWORD;
 
@@ -65,7 +65,7 @@ const sendEmail = async ({ to, subject, html }) => {
         // Remove quotes from password if present
         const password = rawPassword?.replace(/^\"|\"$/g, "");
 
-        const secure = port === 465; // true for 465, false for other ports (e.g., 587)
+        const secure = port === 587; // true for 465, false for other ports (e.g., 587)
 
         const transporter = nodemailer.createTransport({
             host,
